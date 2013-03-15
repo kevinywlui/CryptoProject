@@ -1,0 +1,108 @@
+\documentclass[12pt,reqno]{amsart}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{amsxtra}
+\usepackage[mathscr]{eucal}
+\setlength{\oddsidemargin}{0cm}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{16.5cm}
+\setlength{\topmargin}{0.35cm}
+\setlength{\textheight}{8.5in}
+\renewcommand{\baselinestretch}{1.33}
+\pagestyle{plain}
+\begin{document}
+\title[]{Number Theoretic Random Bit Generators\\June 8, 2012, 2012\\Kevin Lui and Derek Hollowood}
+\maketitle
+\large
+In this paper we discuss 4 number theoretic random bit generators. Some are
+faster than others, while others are more secure. In the following, we outline
+the advantages and disadvantages of each RBG, and demonstrate the
+implementation process. We note that all computations and tests are run on a
+single core of a Phenom II processor at 2.7 GHz on Linux.
+
+\begin{enumerate}
+
+\item
+{\bf RSA:} This algorithm takes two primes $p$ and $q$ and the number of bits $k$ desired in the output.
+
+\begin{enumerate}
+
+\item
+Security: RSA is very secure. In order to decrypt an RSA bit generator, one must factor the product $p q$ without knowing $p$ and $q$. Currently there are no known factorisation algorithms which are feasibly efficient to perform this task.
+
+\item
+Efficiency: RSA takes relatively more time to process. At each step, an integer is exponentiated modulo n. Due to the exponentiation by squaring technique, this does not take too much time. However, RSA is more time consuming than other random bit generators (see below).
+
+\end{enumerate}
+
+\item
+{\bf Blum Blum Shub:} Like RSA, the Blum Blum Shub algorithm takes two primes $p$ and $q$ and the number of bits $k$ desired in the output. However in this algorithm it is required that $p$ and $q$ be congruent to 3 modulo 4.
+
+\begin{enumerate}
+
+\item
+Security: BBS is less secure. It has been shown that decrypting BBS has computational difficulty equivalent to the quadratic residuosity problem i.e. the problem of determining if an integer is a square modulo $p q$ where $p$ and $q$ are unknown primes. This is easier than factoring $pq$ because if $p$ and $q$ are known, then an integer $x$ relatively prime to $pq$ is a square modulo $pq$ if and only if
+\[
+x^{(p-1)/2} \equiv 1 \text{mod} p \hspace{1cm} \text{and} \hspace{1cm} x^{(q-1)/2} \equiv 1 \text{mod} q
+\]
+(this is easily verified via exponentiation by squaring).
+
+\item
+Efficiency: BBS is extremely efficient. Each step of the algorithm involves squaring an integer modulo $pq$ and printing the least significant bit. Computationally this is very simple.
+
+\end{enumerate}
+
+\item
+{\bf Dual Elliptic Curve Deterministic Random Bit Generator:} This algorithm is similar to the above algorithms, only instead of using the group $(Z/pqZ)^*$ we use the group of points on the curve
+\[
+y^2 = x^3 + ax + b \hspace{2mm} \text{mod} p
+\]
+(plus the point at infinity). So the user inputs $a$, $b$, and $p$ to determine the curve and $k$ to specify the number of bits in the output.
+
+\begin{enumerate}
+
+\item
+Security: The Dual EC DRBG is quite secure. There is no current method known which can decrypt it in reasonable time. As of now it appears that the best way to decrypt the Dual EC DRBG is to solve the discrete logarithm problem (i.e. given elements $g$ and $h$ in a finite cyclic group $G$, find an integer $x$ so that $g^x = h$). This problem is hypothesised to be in general unsolvable in polynomial time.
+
+\item
+Efficiency: This algorithm is less efficient than the others. Adding points on an elliptic curve is time consuming and overall the algorithm requires much more computation.
+
+\end{enumerate}
+
+\item
+{\bf Blum-Micali Generator:} The Blum-Micali algorithm takes a large prime $p$ and the number of bit $k$ in the output.
+
+\begin{enumerate}
+
+\item
+Security: For its simplicity, this algorithm is fairly secure. Decrypting Blum-Micali reduces to solving the discrete logarithm problem mentioned above. For $p$ sufficiently large, this is impossible with today's methods.
+
+\item
+Efficiency: The Blum-Micali random bit generator has above average efficiency. While Blum Blum Shub runs the fastest by far, the BM RBG is much quicker than either RSA or the Dual EC DRBG. Most of the run time is spent searching for a primitive root modulo $p$. The rest of the algorithm consists of simple steps.
+
+\end{enumerate}
+
+\vspace{1cm}
+
+It should be noted that the output bit string produced in each of the above algorithms has a high quality of randomness. 0s and 1s are distributed uniformly and bit switches occur about 50 \% of the time. In addition, we have performed a poker test (which checks for frequencies of all 32 possible 5-bit strings in the output). The chi-square results are listed below:
+
+\vspace{1cm}
+
+\begin{center}
+\begin{tabular}{l | r}
+
+\text{Random Bit Generator} & $\chi^2$ \\
+\hline
+\text{BBS} & 31.79 \\
+\text{RSA} & 30.51 \\
+\text{Dual EC DRNG} & 29.69 \\
+\text{BM} & 30.59 \\
+\end{tabular}
+\end{center}
+
+\vspace{1cm}
+
+Since the average $\chi^2$ of each Random Bit Generator is less than $\chi^2$ with $p=.05$, these generators pass the Poker test.
+
+\end{enumerate}
+\end{document}
