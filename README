@@ -5,9 +5,9 @@ Authors:
 
 Description:
 
-  A Number Theortic Bit Generator is a bit generator whose security is dependent
-  on a computationally difficult Number Theortic problem. Here we implement
-  different types of Number Theortic Bit Generator to demonstrate their efficieny
+  A Number Theoretic Bit Generator is a bit generator whose security relies
+  on a computationally difficult Number Theoretic problem. Here we implement
+  various Number Theoretic Bit Generators to demonstrate their efficiency
   and statistical soundness.
 
 ====================
@@ -22,7 +22,7 @@ Files Available:
 
   Helpers:
     ecur.py       | Elliptic Curve Arithmetic
-    fun.py        | Useful Number Theortic Functions
+    fun.py        | Useful Number Theoretic Functions
 
   Statistics:
     stest.py      | Statistical Tests on each instance of RBG
@@ -33,29 +33,29 @@ Files Available:
 Details of Files:
 
 bbs.py:
-  This file implements the Blum Blum Shub Random Bit Generator. To use the
-  function, 2 large primes, p and q,  congruent to 3 modulo 4 should be
-  inputted as well as the number of bits to be generated, k. In general, phi(pq) should be at least 5
-  times larger than k to avoid repeating a period. 
+  This file implements the Blum Blum Shub Random Bit Generator. The function
+  takes as input two large primes p and q, both congruent to 3 modulo 4,
+  as well as an integer k, the number of bits to be generated. In general,
+  phi(pq) should be at least 5 times larger than k to avoid repeating a period.
   
 bm.py:
-  This file implements the Blum-Micali Rnadom Bit Generator. To use the
-  function, a large prime p should be inputted as well as the number of bits to
-  be generated, k. Alternatively, one could modify the function and allow g to
+  This file implements the Blum-Micali Random Bit Generator. The function takes
+  as input a large prime p as well as an integer k, the number of bits to
+  be generated. Alternatively, one could modify the function and allow g to
   be inputted; care should be taken to ensure g is a primitive root. 
   In general, phi(p)=p-1 should be larger than k.
 
 dec.py:
   This file implements the Dual Elliptic Curve Deterministic Random Bit
-  Generator. To use this function, a large prime p should be input as well as
-  the number of bits to be generated, k. Alternatively, one could modify the
+  Generator. The function takes as input a large prime p as well as an integer k,
+  the number of bits to be generated. Alternatively, one could modify the
   function to allow elliptic curve parameters to be inputted; care should be
   taken to ensure the curve is non-singular. In general, phi(p) should be
   larger than k. 
 
 rsa.py:
-  This file implemenents the RSA Random Bit Generator. TO use this function,
-  large primes, p and q, should be inputted as well as the number of bits to be
+  This file implements the RSA Random Bit Generator. Theh function takes as input
+  two large primes p and q as well as an integer k, the number of bits to be
   generated. In general, p and q should be close so that phi(p) and phi(q)
   share few factors. Furthermore, phi(pq) should be at least 5 times larger
   than k to avoid repeating a period.
@@ -67,18 +67,18 @@ fun.py
   This file implements modulus inverse and prime factorization.
 
 stest.py
-  This file implements the statistical tests that are to be runned on each RBG.
+  This file implements the statistical tests that are to be run on each RBG.
   In this implementation, the array of randomly generated bits should be a
   multiple of 5 or it will be cut off. The frequency is defined by the number of 
   1s divided by the total number. The bit switch is the number of times a bit
   differs from the next bit divided by the total bit. The poker test counts the
-  number of disjoint 5 sequence,compares the result with the expected
+  number of disjoint 5 sequence, compares the result with the expected
   result, and gives the Chi square.
 
 tester.py
   This file implements the ability to run stest.py on many instances.
   Currently, it runs 100 tests with 10 different parameters each with 10^6
-  bits. Number of bits generated for each run can be changed by changing the
+  bits. The number of bits generated for each run can be changed by changing the
   size variable. The number of tests and the number of parameters can be
   changed by changing the for loop and expanding the prime array accordingly.
 *********************************************
